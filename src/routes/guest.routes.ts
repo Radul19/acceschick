@@ -6,6 +6,6 @@ import *as guest from '../controllers/guest'
 router.get('/', guest.test)
 router.get('/registro', guest.test)
 router.get('/login', guest.test)
-router.get('/admin', guest.test)
+router.get('/catalogo', guest.test)
 
 export default router
