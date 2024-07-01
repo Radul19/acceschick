@@ -5,7 +5,7 @@ import path from "path";
 import UserSch from "../models/UserSch";
 import { deleteImage, uploadImage } from "../helpers/uploadImages";
 import ItemSch from "../models/ItemSch";
-const debug = true;
+const debug = false;
 
 const indexPath = path.resolve(__dirname, "../app", "index.html");
 // console.log(indexPath);
