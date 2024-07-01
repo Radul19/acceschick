@@ -35,8 +35,8 @@ export const register: RequestHandler = async (req, res) => {
     let password = bcrypt.hashSync(pass, bcrypt.genSaltSync(10));
     const result = await UserSch.create({ name, email, password });
 
-    const { name: n, email: e, address, phone, favorites, cart } = result;
-    return res.send({ name: n, email: e, address, phone, favorites, cart });
+    const { name: n, email: e, address, phone, favorites, cart,_id } = result;
+    return res.send({ name: n, email: e, address, phone, favorites, cart,_id });
   } catch (error: any) {
     res.status(400).json({ msg: error.message });
   }
