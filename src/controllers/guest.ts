@@ -5,7 +5,7 @@ import path from "path";
 import UserSch from "../models/UserSch";
 import { deleteImage, uploadImage } from "../helpers/uploadImages";
 import ItemSch from "../models/ItemSch";
-const debug = false;
+const debug = true;
 
 const indexPath = path.resolve(__dirname, "../app", "index.html");
 // console.log(indexPath);
@@ -45,7 +45,6 @@ export const editUser: RequestHandler = async (req, res) => {
   if (debug) console.log("#editUser");
   try {
     const { _id, name: na, address: ad, phone: ph } = req.body;
-
     let result = await UserSch.findOneAndUpdate(
       { _id },
       {
@@ -56,8 +55,8 @@ export const editUser: RequestHandler = async (req, res) => {
       { new: true }
     );
     if (result) {
-      const { name, email, address, phone, favorites, cart } = result;
-      return res.send({ name, email, address, phone, favorites, cart });
+      const { name, email, address, phone, favorites, cart,_id } = result;
+      return res.send({ name, email, address, phone, favorites, cart,_id });
     } else res.status(400).json({ msg: "Usuario no encontrado" });
   } catch (error: any) {
     res.status(400).json({ msg: error.message });
