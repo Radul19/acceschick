@@ -5,7 +5,7 @@ import routeGuest from './src/routes/guest.routes'
 //@ts-ignore
 import cors from 'cors'
 import path from 'path';
-// import './db'
+import './db'
 const app = express()
 
 app.use(express.urlencoded({ limit: '50mb', extended: true }));
