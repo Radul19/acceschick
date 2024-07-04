@@ -5,7 +5,7 @@ import path from "path";
 import UserSch from "../models/UserSch";
 import { deleteImage, uploadImage } from "../helpers/uploadImages";
 import ItemSch from "../models/ItemSch";
-const debug = false;
+const debug = true;
 
 const indexPath = path.resolve(__dirname, "../app", "index.html");
 // console.log(indexPath);
@@ -35,8 +35,16 @@ export const register: RequestHandler = async (req, res) => {
     let password = bcrypt.hashSync(pass, bcrypt.genSaltSync(10));
     const result = await UserSch.create({ name, email, password });
 
-    const { name: n, email: e, address, phone, favorites, cart,_id } = result;
-    return res.send({ name: n, email: e, address, phone, favorites, cart,_id });
+    const { name: n, email: e, address, phone, favorites, cart, _id } = result;
+    return res.send({
+      name: n,
+      email: e,
+      address,
+      phone,
+      favorites,
+      cart,
+      _id,
+    });
   } catch (error: any) {
     res.status(400).json({ msg: error.message });
   }
@@ -55,8 +63,8 @@ export const editUser: RequestHandler = async (req, res) => {
       { new: true }
     );
     if (result) {
-      const { name, email, address, phone, favorites, cart,_id } = result;
-      return res.send({ name, email, address, phone, favorites, cart,_id });
+      const { name, email, address, phone, favorites, cart, _id } = result;
+      return res.send({ name, email, address, phone, favorites, cart, _id });
     } else res.status(400).json({ msg: "Usuario no encontrado" });
   } catch (error: any) {
     res.status(400).json({ msg: error.message });
@@ -89,6 +97,7 @@ export const createItem: RequestHandler = async (req, res) => {
       description,
       price,
       categories,
+      colors,
     } = req.body;
     const { secure_url, public_id } = await uploadImage(base64);
     const result = await ItemSch.create({
@@ -98,6 +107,7 @@ export const createItem: RequestHandler = async (req, res) => {
       description,
       price,
       categories,
+      colors,
     });
 
     res.send(result);
@@ -117,6 +127,7 @@ export const editItem: RequestHandler = async (req, res) => {
       price,
       categories,
       promotion,
+      colors,
       _id,
     } = req.body;
 
@@ -145,6 +156,7 @@ export const editItem: RequestHandler = async (req, res) => {
         price,
         categories,
         promotion,
+        colors,
       }
     );
     res.send(result);
@@ -213,14 +225,14 @@ export const toggleHeart: RequestHandler = async (req, res) => {
 export const toggleCart: RequestHandler = async (req, res) => {
   if (debug) console.log("#toggleCart");
   try {
-    const { user_id, item_id } = req.body;
+    const { user_id, item_id, color } = req.body;
     const user = await UserSch.findById(user_id);
     if (user) {
-      if (user.cart.includes(item_id)) {
-        let i = user.cart.findIndex((itm) => itm === item_id);
+      if (user.cart.find((it) => it.item_id === item_id)) {
+        let i = user.cart.findIndex((itm) => itm._id === item_id);
         user.cart.splice(i, 1);
       } else {
-        user.cart.push(item_id);
+        user.cart.push({ item_id, color });
       }
       await user.save();
       res.send(user);
@@ -230,6 +242,24 @@ export const toggleCart: RequestHandler = async (req, res) => {
   } catch (error: any) {
     console.log(error);
     res.status(404).json({ msg: error.message });
+  }
+};
+
+export const addColor: RequestHandler = async (req, res) => {
+  if (debug) console.log("#addColor");
+  try {
+    const { user_id, item_id, color } = req.body;
+    const user = await UserSch.findById(user_id);
+    if (user) {
+      let i = user.cart.findIndex((itm) => itm.item_id === item_id);
+      user.cart[i].color = color;
+      await user.save()
+      res.send(user);
+    }else{
+      res.status(404).json({ msg:'Usuario no encontrado' });
+    }
+  } catch (error: any) {
+    res.status(400).json({ msg: error.message });
   }
 };
 

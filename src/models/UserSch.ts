@@ -9,7 +9,15 @@ const ItemSchema = new Schema(
     favorites: { type: Array, default: [] },
     address: { type: String, default: "" },
     phone: { type: String, default: "" },
-    cart: { type: Array, default: [] },
+    cart: {
+      type: [
+        {
+          item_id: { type: String, required: true },
+          color: { type: String, default: undefined },
+        },
+      ],
+      default: [],
+    },
   },
   {
     timestamps: true,

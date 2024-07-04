@@ -12,6 +12,7 @@ const ItemSchema = new Schema(
     favorites: { type: Array, default: [] },
     secure_url: { type: String, required: true },
     public_id: { type: String, required: true },
+    colors: { type: [String], default:undefined },
   },
   {
     timestamps: true,

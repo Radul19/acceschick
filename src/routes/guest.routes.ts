@@ -16,6 +16,7 @@ router.post('/editItem', guest.editItem)
 router.post('/deleteItem', guest.deleteItem)
 router.post('/toggleHeart', guest.toggleHeart)
 router.post('/toggleCart', guest.toggleCart)
+router.post('/addColor', guest.addColor)
 router.post('/editUser', guest.editUser)
 
 router.post('/removePic', guest.removePic)
