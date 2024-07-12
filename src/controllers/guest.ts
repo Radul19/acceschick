@@ -204,19 +204,32 @@ export const toggleHeart: RequestHandler = async (req, res) => {
   if (debug) console.log("#toggleHeart");
   try {
     const { user_id, item_id } = req.body;
-    const user = await UserSch.findById(user_id);
-    if (user) {
-      if (user.favorites.includes(item_id)) {
-        let i = user.favorites.findIndex((itm) => itm === item_id);
-        user.favorites.splice(i, 1);
+    const itm = await ItemSch.findById(item_id);
+    if (itm) {
+      if (itm.favorites.includes(user_id)) {
+        let i = itm.favorites.findIndex((us_id) => us_id === user_id);
+        itm.favorites.splice(i, 1);
       } else {
-        user.favorites.push(item_id);
+        itm.favorites.push(user_id);
       }
-      await user.save();
-      res.send(user);
-    } else {
-      res.status(404).json({ msg: "Error inesperado: Usuario no encontrado" });
-    }
+      await itm.save();
+      const items = await ItemSch.find()
+      res.send(items);
+    } else
+      res.status(404).json({ msg: "Error inesperado: articulo no encontrado" });
+    // const user = await UserSch.findById(user_id);
+    // if (user) {
+    //   if (user.favorites.includes(item_id)) {
+    //     let i = user.favorites.findIndex((itm) => itm === item_id);
+    //     user.favorites.splice(i, 1);
+    //   } else {
+    //     user.favorites.push(item_id);
+    //   }
+    //   await user.save();
+    //   res.send(user);
+    // } else {
+    //   res.status(404).json({ msg: "Error inesperado: Usuario no encontrado" });
+    // }
   } catch (error: any) {
     console.log(error);
     res.status(404).json({ msg: error.message });
@@ -253,10 +266,10 @@ export const addColor: RequestHandler = async (req, res) => {
     if (user) {
       let i = user.cart.findIndex((itm) => itm.item_id === item_id);
       user.cart[i].color = color;
-      await user.save()
+      await user.save();
       res.send(user);
-    }else{
-      res.status(404).json({ msg:'Usuario no encontrado' });
+    } else {
+      res.status(404).json({ msg: "Usuario no encontrado" });
     }
   } catch (error: any) {
     res.status(400).json({ msg: error.message });
