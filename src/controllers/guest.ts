@@ -201,7 +201,7 @@ export const getItems: RequestHandler = async (req, res) => {
   }
 };
 export const toggleHeart: RequestHandler = async (req, res) => {
-  if (debug) console.log("#toggleHeart");
+  if (debug) console.log("#toggleHearts");
   try {
     const { user_id, item_id } = req.body;
     const itm = await ItemSch.findById(item_id);
